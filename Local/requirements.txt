@@ -1,0 +1,7 @@
+JumpWayMQTT
+dlib
+imutils
+opencv_python
+jsonpickle
+flask
+zmq
