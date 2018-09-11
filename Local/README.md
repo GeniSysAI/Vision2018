@@ -1,20 +1,29 @@
-# TASS Facenet Classifier
+# GeniSys Local TASS Engine
+[![GeniSys Local TASS Engine](../images/GeniSys.png)](https://github.com/GeniSysAI/NLU)
 
-[![TASS Facenet Classifier](images/facenet.jpg)](https://github.com/TASS-AI/TASS-Facenet)
+[![UPCOMING RELEASE](https://img.shields.io/badge/UPCOMING%20RELEASE-0.0.1-blue.svg)](https://github.com/GeniSysAI/NLU/tree/0.0.1)
 
-[![CURRENT RELEASE](https://img.shields.io/badge/CURRENT%20RELEASE-0.0.1-blue.svg)](https://github.com/TASS-AI/TASS-Facenet/tree/0.0.1) [![UPCOMING RELEASE](https://img.shields.io/badge/UPCOMING%20RELEASE-0.0.2-blue.svg)](https://github.com/TASS-AI/TASS-Facenet/tree/0.0.2)
+# About GeniSys AI
 
-The **TASS Facenet Classifier** uses Siamese Neural Networks and Triplet Loss to classify known and unknown faces, basically this means it calculates the distance between an image it is presented and a folder of known faces. 
+GeniSys AI is an open source Artificial Intelligence Assistant Network using Computer Vision, Natural Linguistics and the Internet of Things. GeniSys uses a system based on [TASS A.I](https://github.com/TASS-AI/TASS-Facenet "TASS A.I") for [vision](https://github.com/GeniSysAI/Vision "vision"), an [NLU engine](https://github.com/GeniSysAI/NLU "NLU engine") for natural language understanding, in browser speech synthesis and speech recognition for speech and hearing, all homed on a dedicated Linux server in your home and managed via a secure UI.
+
+# About GeniSys Local TASS Engine
+
+The **GeniSys Local TASS Engine** uses Siamese Neural Networks and Triplet Loss to classify known and unknown faces, basically this means it calculates the distance between an image it is presented and a folder of known faces. The local engine is homed on your GeniSys server and connects to your server webcam, this is one of the reasons why the UI is designed to be used on the local network, as if you connect from any where other than in front of the local camera then GeniSys will not be able to see you.
+
+The main program runs in the background and connects to the camera stream and also to the iotJumpWay, it processes each frame alerting the iotJumpWay of the classification and then updates the frame and streams the modified frame to a stream allowing other devices and applications to connect to the feed. You are able to set rules on the iotJumpWay allowing autonomous communication with other IoT devices and applications in the event of identifications or intruders.
+
+When using the GeniSys Local TASS Engine as it is designed to be used, you will be able to ask your AI who you are and they will be able to identify you, in the background logic helps keep track of where known users or intruders are etc.
 
 The project uses an **UP2 (Up Squared)** (A regular Linux desktop or Raspberry 3 and above will also work) the **Intel Movidius** for inference and the [iotJumpWay](https://www.iotjumpway.tech "iotJumpWay") for IoT connectivity. 
 
 With previous versions of TASS built using Tensorflow, **TASS Movidius Inception V3 Classifier**, the model had issues with the [Openset Recognition Issue](https://www.wjscheirer.com/projects/openset-recognition/ "Openset Recognition Issue"). **TASS Facenet Classifier** uses a directory of known images and when presented with a new image, will loop through each image basically measuring the distance between the known image and the presented image, it seems to overcome the issue so far in small testing environments of one or more people. In a large scenario this method will not be scalable, but is fine for small home projects etc. 
 
-Combining **TASS Movidius Inception V3 Classifier** (prone to open set recognition issues) and **TASS Facenet Classifier** will allow us to catch false positives and verify positive classifications using the name/ID of that prediction to quickly index into the images and make a single calculation to determine if Inception classified the person correctly or not using Facenet and making the project more scalable. The latest Inception version of the classifier will be uploaded to this repository soon.
+Combining **TASS Movidius Inception V3 Classifier** (prone to open set recognition issues) and **TASS Facenet Classifier** allows us to catch false positives and verify positive classifications using the name/ID of that prediction to quickly index into the images and make a single calculation to determine if Inception classified the person correctly or not using Facenet and making the project more scalable. The latest Inception version of the classifier will be uploaded to this repository soon.
 
 # What Will We Do?
 
-1. Install the [Intel® NCSDK](https://github.com/movidius/ncsdk "Intel® NCSDK") on a Linux development device.
+1. Install the [Intel® NCSDK](https://github.com/movidius/ncsdk "Intel® NCSDK") on a [GeniSys Server](https://github.com/GeniSysAI/Server "GeniSys Server").
 2. Clone & set up the repo.
 3. Install and download all requirements.
 4. Prepare your known and testing faces datasets.
@@ -25,7 +34,7 @@ Combining **TASS Movidius Inception V3 Classifier** (prone to open set recogniti
 
 # Python Versions
 
-- Tested in Python 3.5
+- Tested in Python 3
 
 # Software Requirements
 
@@ -37,20 +46,11 @@ Combining **TASS Movidius Inception V3 Classifier** (prone to open set recogniti
 # Hardware Requirements
 
 - 1 x [Intel® Movidius](https://www.movidius.com/ "Intel® Movidius")
-- 1 x Linux Desktop for Movidius development (Full SDK)
-- 1 x Raspberry Pi 3 / UP Squared for the classifier / webcam
+- 1 x [GeniSys Server](https://github.com/GeniSysAI/Server "GeniSys Server")
 
-# Optional Hardware Requirements
+# Install NCSDK On GeniSys Server
 
-- 1 x Raspberry Pi 3 for IoT connected alarm
-- 1 x Grove starter kit for IoT, Raspberry Pi edition
-- 1 x Blue LED (Grove)
-- 1 x Red LED (Grove)
-- 1 x Buzzer (Grove)
-
-# Install NCSDK On Development Device
-
-![Intel® Movidius](images/movidius.jpg)
+![Intel® Movidius](../images/movidius.jpg)
 
 The first thing you will need to do is to install the **NCSDK** on your development device.
 
@@ -71,17 +71,17 @@ Next plug your Movidius into your device and issue the following commands:
 
 # Cloning The Repo
 
-You will need to clone this repository to a location on your development terminal. Navigate to the directory you would like to download it to and issue the following commands.
+You will need to clone this repository to a location on your GeniSys Server. Navigate to the /home/USERNAME/Core/Vision directory (create it if it doesn't exist) and issue the following commands.
 
-    $ git clone https://github.com/TASS-AI/TASS-Facenet.git
+    $ git clone https://github.com/GeniSysAI/Vision.git
 
-Once you have the repo, you will need to find the files in this folder located in [TASS-Facenet](https://github.com/TASS-AI/TASS-Facenet "TASS-Facenet").
+Once you have the repo, you will need to find the files in this folder located in the [Local](https://github.com/GeniSysAI/Vision/tree/master/Local "Local") directory, this is the project root for the GeniSys Local TASS Engine.
 
 # Setup
 
-Now you need to setup the software required for the classifier to run. The setup.sh script is a shell script that you can run on both your development device and Raspberry Pi 3 / UP Squared device. 
+Now you need to setup the software required for the classifier to run. The setup.sh script is a shell script that you can run on your GeniSys Server. 
 
-Make sure you have installed the **NCSDK** on your developement machine, the following command assumes you are located in the [TASS-Facenet](https://github.com/TASS-AI/TASS-Facenet "TASS-Facenet") directory.
+Make sure you have installed the **NCSDK** on your developement machine, the following command assumes you are located in the [Local](https://github.com/GeniSysAI/Vision/tree/master/Local "Local") directory.
 
 The setup.sh file is an executable shell script that will do the following:
 
@@ -105,7 +105,7 @@ If you have problems running the above program and have errors try run the follo
 
 # iotJumpWay Device Connection Credentials & Settings
 
-Setup an iotJumpWay Location Device for IDC Classifier, ensuring you set up a camera node, as you will need the ID of the dummy camera for the project to work. Once your create your device add the location ID and Zone ID to the **IoTJumpWay** details in the confs file located at **required/confs.json**, also add the device ID and device name exactly, add the MQTT credentials to the **IoTJumpWayMQTT** .
+Setup an iotJumpWay Location Device for IDC Classifier, ensuring you set up a camera node, as you will need the ID of the camera for the project to work. Once your create your device add the location ID and Zone ID to the **IoTJumpWay** details in the confs file located at **required/confs.json**, also add the device ID and device name exactly, add the MQTT credentials to the **IoTJumpWayMQTT** .
 
 You will need to edit your device and add the rules that will allow it to communicate autonomously with the other devices and applications on the network, but for now, these are the only steps that need doing at this point.
 
@@ -150,122 +150,59 @@ Follow the [iotJumpWay Dev Program Location Device Doc](https://www.iotjumpway.t
 
 # Preparing Dataset
 
-You need to set up two very small datasets. As we are using a pretrained Facenet model there is no training to do in this tutorial and we only need one image per known person. You should see the **known** and **testing** folders in the **data** directory, this is where you will store 1 image of each person you want to be identified by the network, and also a testing dataset that can include either known or unknown faces for testing. When you store the known data, you should name each image with the name you want them to be identified as in the system, in my testing I used images of me and two other random people, the 1 image used to represent myself in the known folder was named Adam  
+You need to set up two very small datasets. As we are using a pretrained Facenet model there is no training to do in this tutorial and we only need one image per known person. You should see the **known** and **testing** folders in the **data** directory, this is where you will store 1 image of each person you want to be identified by the network, and also a testing dataset that can include either known or unknown faces for testing. When you store the known data, you should name each image with the name you want them to be identified as in the system, in my testing I used images of me and two other random people, the 1 image used to represent myself in the known folder was named Adam .
 
-# Test TASS Facenet Classifier
+# Run GeniSys Local TASS Engine
 
-Now it is time to test out your classifier, on your development machine in the [TASS-Facenet](https://github.com/TASS-AI/TASS-Facenet "TASS-Facenet") directory:
-
-
-```
- $ python3.5 Classifier.py
-```
-
-This will run the classifier test program, the program will first loop through your testing images, and once it sees a face it will loop through all of the known faces and match them against the faces, once it finds a match, or not, it will move on to the next image in your testing loop until all images have been classifier as known or unknown. 
-
-```
--- Total Difference is: 1.7931939363479614
--- NO MATCH
--- Total Difference is: 0.8448524475097656
--- MATCH Adam-2.jpg
-```
-
-# Run TASS Facenet Classifier On WebCam
+Make sure you have set up you GeniSys Server and NLU Engine and use the  [NGINX configuration](https://github.com/GeniSysAI/Server/blob/master/etc/nginx/sites-available/default "NGINX configuration") provided. To set up your server you can follow [GeniSys Server](https://github.com/GeniSysAI/Server/ "GeniSys Server") and to set up your NLU engine you can follow [GeniSys NLU](https://github.com/GeniSysAI/Server/ "GeniSys NLU").
 
 Now comes the good part, realtime facial recognition and identification. 
 
-![TASS Facenet Classifier](images/capture.jpg)
+![TASS Facenet Classifier](../images/capture.jpg)
 
-**WebCam.py** should connect to the local webcam on your device, process the frames and send them to a local server that is started by this same program. Be sure to edit the **ID** and **Name** values of the **Cameras** section of **required/confs.json** section using the details provided when setting up the configs, and add the URL of the IP of your device ie: http://192.168.1.200 to the **Stream** value and you can change **StreamPort** to whatever you want. These two fields will determine the address that you access your camera on, using the previous IP (Stream) and the StreamPort as 8080 the address would be **http://192.168.1.200:8080/index.html**.
+**LocalStreamer.py** should connect to the local webcam on your GeniSys Server, process the frames and send them to a socket that is started by this same program. Be sure to edit the **ID** and **Name** values of the **Cameras** section of **required/confs.json** section using the details provided when setting up the configs.
 
 ```
 "Cameras": [
 {
     "ID": 0,
     "URL": 0,
+    "RTSPuser": "",
+    "RTSPpass": "",
+    "RTSPip": "",
+    "RTSPport": "",
+    "RTSPendpoint": "",
     "Name": "",
-    "Stream": "",
-    "StreamPort": 8080
+    "Stream": "192.168.1.200",
+    "StreamAccess": "",
+    "StreamPort": 8080,
+    "SocketPort": 8181 
 }
 ```
 
-The program uses a **dlib** model to recognize faces in the frames / mark the facial points on the frame, and **Facenet** to determine whether they are a known person or not. Below are the outputs around the time that the above photo was taken. You will see that the program publishes to the **Warnings** channel of the iotJumpWay, this is currently the name for the channel that handles device to device communication via rules.
+Add the URL of the IP of your device ie: http://192.168.1.200 to the **Stream** value and you can change **StreamPort** & **SocketPort** to whatever you want. These two fields will determine the port that streams your camera to the network and the port that streams your camera via sockets, using the previous IP (Stream) and the StreamPort as 8080 and SocketPort as 8181 the address to access your feed would be **http://192.168.1.200:8080/i.html** or **http://192.168.1.200:8080/i.mjpg**, the system will internally take care of the sockets providing you set up your configuration correctly. 
+
+**LocalReceiver.py** connects to the socket stream and streams it as an mjpg. 
+
+If you used the provided [NGINX configuration](https://github.com/GeniSysAI/Server/blob/master/etc/nginx/sites-available/default "NGINX configuration") of the [GeniSys Server](https://github.com/GeniSysAI/Server/ "GeniSys Server") guide:
 
 ```
--- Saved frame
--- Total Difference is: 1.0537698864936829
--- MATCH
--- Published: 30
--- Published to Device Warnings Channel
+server_name Subdomain.Domain.TLD;
+
+location ~ ^/tasslocal/ {
+    proxy_pass http://###.###.#.###:8080/$uri$is_args$args;
+}
 ```
 
-# Install NCSDK On UP Squared / Raspberry Pi 3
+you will now be able to access your feed by visiting **http://www.YourDomain.com/tasslocal/i.html** or **http://www.YourDomain.com/tasslocal/i.mjpg**.
 
-![UP2](images/UPSquared.jpg)
-
-If you would like to use the IDC Classifier on the edge, this tutorial has been tested on the **UP2** and the **Raspberry Pi**. You can install the **NCSDK** on your **UP Squared** / **Raspberry Pi 3** device, this will be used by the classifier to carry out inference on local images or images received via the API we will create. Make sure you have the Movidius plugged in to the edge device and follow the guide below:
+The program uses a **dlib** model to recognize faces in the frames / mark the facial points on the frame, and **Facenet** to determine whether they are a known person or not. Below are the outputs around the time that the above photo was taken. You will see that the program publishes to the **TASS** channel of the iotJumpWay, this is the name for the channel that handles device to device communication for TASS devices via rules that you can set up in the iotJumpWay console.
 
 ```
- $ mkdir -p ~/workspace
- $ cd ~/workspace
- $ git clone https://github.com/movidius/ncsdk.git
- $ cd ~/workspace/ncsdk/api/src
- $ make
- $ sudo make install
-```
-```
- $ cd ~/workspace
- $ git clone https://github.com/movidius/ncappzoo
- $ cd ncappzoo/apps/hello_ncs_py
- $ python3 hello_ncs.py
-```
-
-# Upload File Structure To UP Squared / Raspberry Pi 3
-
-Now you need to upload the required files to the UP Squared / Raspberry Pi 3. Copy the **TASS-Facenet** directory from your **development machine** to your **UP Squared / Raspberry Pi 3** then navigate to the home directory of the project on your device and run the following command.  
-```
- $ pip3 install -r requirements.txt --user
-```
-
-# Use TASS Facenet Classifier on UP Squared / Raspberry Pi 3
-
-You can use the **TASS Facenet Classifier** on **UP Squared** / **Raspberry Pi 3** by entering the following command in the [TASS-Facenet](https://github.com/TASS-AI/TASS-Facenet "TASS-Facenet") directory of your **UP Squared** / **Raspberry Pi 3**:
-
-```
- $ python3.5 Classifier.py
-```
-# Process / Stream TASS Facenet Classifier WebCam
-
-**WebCam.py** connects to a local webcam on your device or IP cam, processes the frames and sends them to a local server that is started by this same program. Be sure to edit the **ID** and **Name** values of the **Cameras** section of **required/confs.json** section using the details provided when setting up the configs, and add the URL of the IP of your device ie: http://192.168.1.200 to the **Stream** value and you can change **StreamPort** to whatever you want. These two fields will determine the address that you access your camera on, using the previous IP (Stream) and the StreamPort as 8080 the address would be **http://192.168.1.200:8080/index.html**.
-
-You can process / stream a webcam using the **TASS Facenet Classifier** on **UP Squared** / **Raspberry Pi 3** by entering the following command in the [TASS-Facenet](https://github.com/TASS-AI/TASS-Facenet "TASS-Facenet") directory of your **UP Squared** / **Raspberry Pi 3**:
-
-```
- $ python3.5 WebCam.py
-```
-
-# Launch TASS Facenet Classifier Server
-
-**Server.py** will launch a local server that will make the TASS Facenet Classifier accessible as an API endpoint on your local network. The next step is to use the provided client to send images to this API, but you can also use this for Desktop / Mobile applications and other IoT devices /  applications.
-
-For extra security it is also possible to add an **A record** to your web domain's DNS Zone pointing a sub domain to your public IP, then with port forwarding you can forward requests to the IP/Port of the API, combining this with services such as LetsEncrypt will allow you to send requests to your API from the outside world over an encrypted connection. 
-
-You can start the **TASS Facenet Classifier** on **UP Squared** / **Raspberry Pi 3** by entering the following command in the [TASS-Facenet](https://github.com/TASS-AI/TASS-Facenet "TASS-Facenet") directory of your **UP Squared** / **Raspberry Pi 3**:
-
-```
- $ python3.5 Server.py
-```
-
-Now leave this connection and open a new terminal session to your device.
-
-# Send Images To API 
-
-The final program of this project allows you to send testing images from the **data/testing/** directory to the API for classification.
-
-You can start sending images to **TASS Facenet Classifier Server** on **UP Squared** / **Raspberry Pi 3** by entering the following command in the [TASS-Facenet](https://github.com/TASS-AI/TASS-Facenet "TASS-Facenet") directory of your **UP Squared** / **Raspberry Pi 3**:
-
-```
- $ python3.5 Client.py
+2018-09-11 15:41:09|TASS|INFO: Calculated Distance 1.000346302986145
+2018-09-11 15:41:09|TASS|OK: TASS Identified Adam In 0.2891969680786133 Seconds With Confidence Of 1.000346302986145
+-- Published: 8174
+-- Published to Device TASS Channel
 ```
 
 # Acknowledgements
@@ -274,21 +211,19 @@ You can start sending images to **TASS Facenet Classifier Server** on **UP Squar
 - Uses code from Intel® **davidsandberg/facenet** ([davidsandberg/facenet Github](https://github.com/davidsandberg/facenet "davidsandberg/facenet"))
 
 # Contributing
-Please read **CONTRIBUTING.md** for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/GeniSysAI/NLU/blob/master/CONTRIBUTING.md "CONTRIBUTING.md") for details on our code of conduct, and the process for submitting pull requests to us.
 
 # Versioning
-We use SemVer for versioning. For the versions available, see the tags on this repository.
+We use SemVer for versioning. For the versions available, see the tags on this repository and [RELEASES.md](https://github.com/GeniSysAI/NLU/blob/master/RELEASES.md "RELEASES.md").
 
 # License
-This project is licensed under the **MIT License** - see the **LICENSE.md** file for details
+This project is licensed under the **MIT License** - see the [LICENSE](https://github.com/GeniSysAI/NLU/blob/master/LICENSE "LICENSE") file for details.
 
 # Bugs/Issues
-
-We use issues to track bugs and general requests related to using this project.
+We use the [repo issues](https://github.com/GeniSysAI/NLU/issues "repo issues") to track bugs and general requests related to using this project. 
 
 # Author
-
-[![Adam Milton-Barker: BigFinte IoT Network Engineer & Intel® Software Innovator](images/Adam-Milton-Barker.jpg)](https://github.com/AdamMiltonBarker)
+[![Adam Milton-Barker: BigFinte IoT Network Engineer & Intel® Software Innovator (IoT, AI, VR)](../images/Adam-Milton-Barker.jpg)](https://github.com/AdamMiltonBarker)
 
 
 
