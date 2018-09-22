@@ -110,7 +110,7 @@ class CamHandler(BaseHTTPRequestHandler):
                     frameWait = frameWait + 1
                     
             except KeyboardInterrupt:
-                exit
+                return
             return
             
         if self.path.endswith('.html'):
