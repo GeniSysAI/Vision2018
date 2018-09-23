@@ -45,7 +45,6 @@ Combining **TASS Movidius Inception V3 Classifier** (prone to open set recogniti
 - [Intel® NCSDK](https://github.com/movidius/ncsdk "Intel® NCSDK")
 - [Tensorflow 1.4.0](https://www.tensorflow.org/install "Tensorflow 1.4.0")
 - [iotJumpWay MQTT Client](https://github.com/iotJumpway/JumpWayMQTT "iotJumpWay MQTT Client")
-- [GrovePi](https://github.com/DexterInd/GrovePi "GrovePi") (OPTIONAL)
 
 # Hardware Requirements
 
