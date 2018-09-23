@@ -209,6 +209,12 @@ The program uses a **dlib** model to recognize faces in the frames / mark the fa
 -- Published to Device TASS Channel
 ```
 
+# Related Inspiration
+
+Some places I look for inspiration, code snippets, walk throughs when building projects:
+
+- [Adrian (PyImageSearch)](https://www.pyimagesearch.com/author/adrian/ "Adrian (PyImageSearch)") has always given inspiration for use cases and features. Although I have mostly stopped working with OpenCV for recognition, I have previously found his tutorials regarding OpenCV useful.
+
 # Acknowledgements
 
 - Uses code from Intel® **movidius/ncsdk** ([movidius/ncsdk Github](https://github.com/movidius/ncsdk "movidius/ncsdk Github"))<br />

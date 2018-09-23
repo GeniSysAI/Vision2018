@@ -30,15 +30,25 @@
 #
 ############################################################################################
 
-import os, json, cv2, time 
+import os, json, time 
 from datetime import datetime
 
-class Logging():
+class Logging(): 
     
     def __init__(self):
         
         pass
+
+    def setLogFile(self, path):
         
-    def logMessage(self, process, messageType, message):
+        return path + datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S') + ".txt"
         
-        print(datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S') + "|" + process + "|" + messageType + ": " + message)
+    def logMessage(self, logfile, process, messageType, message, hide = False):
+        
+        logString = datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S') + "|" + process + "|" + messageType + ": " + message
+
+        with open(logfile,"a") as logLine:
+            logLine.write(logString+'\r\n')
+
+        if hide == False:
+            print(logString) 

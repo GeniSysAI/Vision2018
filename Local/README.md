@@ -52,6 +52,35 @@ Combining **TASS Movidius Inception V3 Classifier** (prone to open set recogniti
 - 1 x [Intel® Movidius](https://www.movidius.com/ "Intel® Movidius")
 - 1 x [GeniSys Server](https://github.com/GeniSysAI/Server "GeniSys Server")
 
+# UFW Firewall
+
+UFW firewall is used to protect the ports of your TASS device, in this case, the local firewall has already been set up when you set up the GeniSys Server all you need to do is open the ports that you decide to use for this project. The ports are specified in **required/confs.json**. The default settings are set to 8080 for the streaming port and 8956 for the socket port. **FOR YOUR SECURITY YOU SHOULD CHANGE THESE!**.
+
+```
+"Cameras": [
+    {
+        "ID": 0,
+        "URL": "",
+        "RTSPuser": "",
+        "RTSPpass": "",
+        "RTSPip": "",
+        "RTSPport": 0,
+        "RTSPendpoint": "",
+        "Name": "",
+        "Stream": "",
+        "StreamAccess": "",
+        "StreamPort": 8080,
+        "SocketPort": 8956 
+    }
+]
+```
+
+To allow access to the ports use the following command for each of your ports:
+
+```
+ $ sudo ufw allow YourPortNumber
+```
+
 # Install NCSDK On GeniSys Server
 
 ![Intel® Movidius](../images/movidius.jpg)
@@ -117,6 +146,10 @@ Follow the [iotJumpWay Dev Program Location Device Doc](https://www.iotjumpway.t
 
 ```
 {
+    "AI":{
+        "Logs": "logs",
+        "IP": ""
+    },
     "IoTJumpWay": {
         "Location": 0,
         "Zone": 0,
@@ -129,10 +162,17 @@ Follow the [iotJumpWay Dev Program Location Device Doc](https://www.iotjumpway.t
     "Cameras": [
         {
             "ID": 0,
-            "URL": 0,
+            "URL": "",
+            "RTSPuser": "",
+            "RTSPpass": "",
+            "RTSPip": "",
+            "RTSPport": 0,
+            "RTSPendpoint": "",
             "Name": "",
             "Stream": "",
-            "StreamPort": 8080
+            "StreamAccess": "",
+            "StreamPort": 8080,
+            "SocketPort": 8956 
         }
     ],
     "Sensors": {},
@@ -148,6 +188,12 @@ Follow the [iotJumpWay Dev Program Location Device Doc](https://www.iotjumpway.t
         "TestingPath":"data/testing/",
         "ValidPath":"data/known/",
         "Threshold": 1.20
+    },
+	"MySql":{
+        "host" : "localhost",
+        "dbname" : "",
+        "dbusername" : "",
+        "dbpassword" : ""
     }
 }
 ```
@@ -198,7 +244,7 @@ location ~ ^/tasslocal/ {
 }
 ```
 
-you will now be able to access your feed by visiting **http://www.YourDomain.com/tasslocal/i.html** or **http://www.YourDomain.com/tasslocal/i.mjpg**.
+you will now be able to access your feed by visiting **http://www.YourDomain.com/tasslocal/i.html** or **http://www.YourDomain.com/tasslocal/i.mjpg**, you can change the **i** inthe URL to anything you like as long as the extensions are **.html** or **.mjpg**.
 
 The program uses a **dlib** model to recognize faces in the frames / mark the facial points on the frame, and **Facenet** to determine whether they are a known person or not. Below are the outputs around the time that the above photo was taken. You will see that the program publishes to the **TASS** channel of the iotJumpWay, this is the name for the channel that handles device to device communication for TASS devices via rules that you can set up in the iotJumpWay console.
 
@@ -208,6 +254,10 @@ The program uses a **dlib** model to recognize faces in the frames / mark the fa
 -- Published: 8174
 -- Published to Device TASS Channel
 ```
+
+# Tracking & Privacy
+
+It is important to note that TASS communicates with the iotJumpWay to register events that can be used in conjunction with rules that can be set up in the iotJumpWay console. As of this update, no identifying information is sent to the iotJumpWay, instead all data is stored on your local server MySql database. This ensures you remain in control of the data generated on your network, but can also benefit from automation via iotJumpWay rules.
 
 # Acknowledgements
 

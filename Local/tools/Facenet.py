@@ -38,10 +38,13 @@ from tools.Logging import Logging
 
 class Facenet():
     
-    def __init__(self):
+    def __init__(self, confs):
         
         self.Logging = Logging()
-        self.OpenCV = OpenCV()
+        self._confs  = confs
+        self.LogFile = self.Logging.setLogFile(self._confs["AI"]["Logs"]+"/local")   
+
+        self.OpenCV  = OpenCV()
         
     def infer(self, image_to_classify, facenet_graph):
         
@@ -54,11 +57,13 @@ class Facenet():
     def match(self, face1_output, face2_output):
 
         if (len(face1_output) != len(face2_output)):
+            
             self.Logging.logMessage(
+                self.LogFile,
                 "TASS",
                 "ERROR",
-                "Distance Missmatch"
-            )
+                "Distance Missmatch")
+
             return False
 
         total_diff = 0
@@ -66,8 +71,9 @@ class Facenet():
 
             this_diff = np.square(face1_output[output_index] - face2_output[output_index])
             total_diff += this_diff
-
+            
         self.Logging.logMessage(
+            self.LogFile,
             "TASS",
             "INFO",
             "Calculated Distance " + str(total_diff)
