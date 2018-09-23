@@ -162,8 +162,6 @@ Make sure you have set up you GeniSys Server and NLU Engine and use the  [NGINX 
 
 Now comes the good part, realtime facial recognition and identification. 
 
-![TASS Facenet Classifier](images//capture.jpg)
-
 **LocalStreamer.py** should connect to the local webcam on your GeniSys Server, process the frames and send them to a socket that is started by this same program. Be sure to edit the **ID** and **Name** values of the **Cameras** section of **required/confs.json** section using the details provided when setting up the configs.
 
 ```
