@@ -206,9 +206,7 @@ You need to set up two very small datasets. As we are using a pretrained Facenet
 
 Make sure you have set up you GeniSys Server and NLU Engine and use the  [NGINX configuration](https://github.com/GeniSysAI/Server/blob/master/etc/nginx/sites-available/default "NGINX configuration") provided. To set up your server you can follow [GeniSys Server](https://github.com/GeniSysAI/Server/ "GeniSys Server") and to set up your NLU engine you can follow [GeniSys NLU](https://github.com/GeniSysAI/Server/ "GeniSys NLU").
 
-Now comes the good part, realtime facial recognition and identification. 
-
-![TASS Facenet Classifier](../images/capture.jpg)
+Now comes the good part, realtime facial recognition and identification.
 
 **LocalStreamer.py** should connect to the local webcam on your GeniSys Server, process the frames and send them to a socket that is started by this same program. Be sure to edit the **ID** and **Name** values of the **Cameras** section of **required/confs.json** section using the details provided when setting up the configs.
 
