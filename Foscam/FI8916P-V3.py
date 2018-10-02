@@ -377,9 +377,6 @@ while True:
                             TASS.fontScale,
                             TASS.fontColor,
                             TASS.lineType)
-
-                    cv2.imwrite("testProcessed.jpg", frame)
-                    cv2.imwrite("testProcessedFull.jpg", currentFace)
  
         encoded, buffer = cv2.imencode('.jpg', frame)
         TASS.tassSocket.send(base64.b64encode(buffer))
