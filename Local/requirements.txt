@@ -2,5 +2,4 @@ JumpWayMQTT
 dlib
 imutils
 flask
-zmq
 pymsql

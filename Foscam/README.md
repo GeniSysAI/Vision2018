@@ -51,21 +51,12 @@ Combining **TASS Movidius Inception V3 Classifier** (prone to open set recogniti
 - [Intel® NCSDK](https://github.com/movidius/ncsdk "Intel® NCSDK")
 - [Tensorflow 1.4.0](https://www.tensorflow.org/install "Tensorflow 1.4.0")
 - [iotJumpWay MQTT Client](https://github.com/iotJumpway/JumpWayMQTT "iotJumpWay MQTT Client")
-- [GrovePi](https://github.com/DexterInd/GrovePi "GrovePi") (OPTIONAL)
 
 # Hardware Requirements
 
 - 1 x [Intel® Movidius](https://www.movidius.com/ "Intel® Movidius")
 - 1 x Linux Desktop for Movidius development (Full SDK)
-- 1 x Raspberry Pi 3 / UP Squared for the classifier / webcam
-
-# Optional Hardware Requirements
-
-- 1 x Raspberry Pi 3 for IoT connected alarm
-- 1 x Grove starter kit for IoT, Raspberry Pi edition
-- 1 x Blue LED (Grove)
-- 1 x Red LED (Grove)
-- 1 x Buzzer (Grove)
+- 1 x Raspberry Pi 3 / UP Squared for the classifier / servers
 
 # Install NCSDK On Development Device
 
@@ -263,13 +254,13 @@ Links to related articles that helped at various stages of the project for resea
 Please read [CONTRIBUTING.md](https://github.com/GeniSysAI/Vision/blob/master/CONTRIBUTING.md "CONTRIBUTING.md") for details on our code of conduct, and the process for submitting pull requests to us.
 
 # Versioning
-We use SemVer for versioning. For the versions available, see [GeniSysAI/Vision/releases](https://github.com/GeniSysAI/Vision/releases "GeniSysAI/Vision/releases").
+I use SemVer for versioning. For the versions available, see [GeniSysAI/Vision/releases](https://github.com/GeniSysAI/Vision/releases "GeniSysAI/Vision/releases").
 
 # License
 This project is licensed under the **MIT License** - see the [LICENSE](https://github.com/GeniSysAI/Vision/blob/master/LICENSE "LICENSE") file for details.
 
 # Bugs/Issues
-We use the [repo issues](https://github.com/GeniSysAI/Vision/issues "repo issues") to track bugs and general requests related to using this project. 
+I use the [repo issues](https://github.com/GeniSysAI/Vision/issues "repo issues") to track bugs and general requests related to using this project. 
 
 # Author
 [![Adam Milton-Barker: BigFinte IoT Network Engineer & Intel® Software Innovator](images/Adam-Milton-Barker.jpg)](https://github.com/AdamMiltonBarker)
