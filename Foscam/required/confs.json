@@ -1,0 +1,54 @@
+{
+    "aiCore":{
+        "Logs": "logs/",
+        "IP": "logs/"
+    }, 
+    "iotJumpWay": {
+        "Location": 0,
+        "Zone": 0,
+        "Device": 0,
+        "DeviceName" : "",
+        "App": 0,
+        "AppName" : "",
+        "MQTT": {
+            "Username": "",
+            "Password": ""
+        }
+    },
+    "Actuators": {},
+    "Cameras": [
+        {
+            "ID": 0,
+            "URL": "",
+            "RTSPuser": "",
+            "RTSPpass": "",
+            "RTSPip": "",
+            "RTSPport": "",
+            "RTSPendpoint": "",
+            "Name": "",
+            "Stream": "",
+            "StreamAccess": "",
+            "StreamPort": 8080 
+        }
+    ],
+	"Classifier":{
+        "NetworkPath":"",
+        "Graph":"model/tass.graph",
+        "Dlib":"model/dlib/shape_predictor_68_face_landmarks.dat",
+		"dataset_dir":"model/train/",
+        "TestingPath":"data/testing/",
+        "ValidPath":"data/known/",
+        "Threshold": 1.20
+	},
+	"MySql":{
+        "host" : "",
+        "dbname" : "",
+        "dbusername" : "",
+        "dbpassword" : ""
+    },
+    "Sensors": {},
+	"Socket":{
+        "host" : "localhost",
+        "port" : 8956
+    }
+}

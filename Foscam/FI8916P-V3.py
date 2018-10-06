@@ -42,13 +42,13 @@ import JumpWayMQTT.Device as JWDevice
 from datetime          import datetime
 from skimage.transform import resize
 from imutils           import face_utils
-from mvnc              import mvncapi as mvnc
 from flask             import Flask, request
 
 from tools.Helpers     import Helpers 
+from tools.JumpWay     import JumpWay
+from tools.MySql       import MySql
 from tools.OpenCV      import OpenCV
 from tools.Facenet     import Facenet
-from tools.MySql       import MySql
 
 app = Flask(__name__)
 
@@ -65,125 +65,42 @@ class TASS():
 
         self.Helpers     = Helpers()
         self._confs      = self.Helpers.loadConfigs()
-        self.LogFile     = self.Helpers.setLogFile(self._confs["aiCore"]["Logs"]+"/local")  
+        self.LogFile     = self.Helpers.setLogFile(self._confs["aiCore"]["Logs"]+"/Foscam")  
         
         self.MySql       = MySql()
         
         self.OpenCV      = OpenCV()
         self.OCVframe    = None
-
         self.font        = cv2.FONT_HERSHEY_SIMPLEX
         self.fontColor   = (255,255,255)
         self.fontScale   = 1
         self.lineType    = 1
         self.identified  = 0
 
-        self.tassSocket  = None
-        self.movidius    = None
-
         self.Facenet     = Facenet()
-        self.fgraph      = None
-        self.fgraphfile  = None
-        self.validDir    = self._confs["ClassifierSettings"]["NetworkPath"] + self._confs["ClassifierSettings"]["ValidPath"]
-        self.testingDir  = self._confs["ClassifierSettings"]["NetworkPath"] + self._confs["ClassifierSettings"]["TestingPath"]
 
-        self.devices, self.device = self.CheckDevices()
-        self.loadGraph("Facenet")
+        self.movidius, self.devices, self.device = self.Facenet.CheckDevices()
+        self.fgraph,  self.fgraphfile            = self.Facenet.loadGraph("Facenet", self.movidius)
+
+        self.validDir    = self._confs["Classifier"]["NetworkPath"] + self._confs["Classifier"]["ValidPath"]
+        self.testingDir  = self._confs["Classifier"]["NetworkPath"] + self._confs["Classifier"]["TestingPath"]
+        
+        self.detector    = dlib.get_frontal_face_detector()
+        self.predictor   = dlib.shape_predictor(self._confs["Classifier"]["Dlib"])
+
         self.connectToCamera()
+
+        self.tassSocket  = None
         self.configureSocket()
-        
-        self.detector   = dlib.get_frontal_face_detector()
-        self.predictor  = dlib.shape_predictor(self._confs["ClassifierSettings"]["Dlib"])
-        self.validDir   = self._confs["ClassifierSettings"]["NetworkPath"] + self._confs["ClassifierSettings"]["ValidPath"]
-        self.testingDir = self._confs["ClassifierSettings"]["NetworkPath"] + self._confs["ClassifierSettings"]["TestingPath"]
 
-        self.startMQTT()
+        self.JumpWay    = JumpWay()
+        self.JumpWayCL  = self.JumpWay.startMQTT()
         
         self.Helpers.logMessage(
-			self.LogFile,
-            "TASS",
-            "INFO",
-            "TASS Ready")
-
-    def CheckDevices(self):
-
-        ###############################################################
-        #
-        # Checks for Movidius devices and connects to the first device, 
-        # if no devices are plugged in the program will quit.
-        #
-        ###############################################################
-
-        #mvnc.SetGlobalOption(mvnc.GlobalOption.LOGLEVEL, 2)
-        devices = mvnc.EnumerateDevices()
-
-        if len(devices) == 0:
-            
-            self.Helpers.logMessage(
-                self.LogFile,
-                "TASS",
-                "INFO",
-                "No Movidius Devices")
-                
-            self.Helpers.logMessage(
-                self.LogFile,
-                "TASS",
-                "INFO",
-                "TASS Exiting")
-
-            quit()
-
-        self.movidius = mvnc.Device(devices[0])
-        self.movidius.OpenDevice()
-        
-        self.Helpers.logMessage(
-			self.LogFile,
-            "TASS",
-            "INFO",
-            "Connected To Movidius")
-
-        return devices, devices[0]
-
-    def loadGraph(self, graphID):
-
-        ###############################################################
-        #
-        # Loads the graph
-        #
-        ###############################################################
-
-        if graphID == "Facenet":
-
-            with open(self._confs["ClassifierSettings"]["NetworkPath"] + self._confs["ClassifierSettings"]["Graph"], mode='rb') as f:
-                self.fgraphfile = f.read()
-
-            self.allocateGraph(
-                self.fgraphfile,
-                "Facenet")
-                
-            self.Helpers.logMessage(
-                self.LogFile,
-                "TASS",
-                "INFO",
-                "Loaded TASS Requirements")
-
-    def allocateGraph(self, graphfile, graphID):
-
-        ###############################################################
-        #
-        # Allocates the graph
-        #
-        ###############################################################
-
-        if graphID == "Facenet":
-
-            self.fgraph = self.movidius.AllocateGraph(graphfile)
-            
-            self.Helpers.logMessage(
-                self.LogFile,
-                "TASS",
-                "INFO",
-                "TASS Facenet Graph Allocated")
+                            self.LogFile,
+                            "TASS",
+                            "INFO",
+                            "TASS Ready")
         
     def connectToCamera(self):
 
@@ -197,10 +114,10 @@ class TASS():
         self.OCVframe = cv2.VideoCapture("rtsp://"+self._confs["Cameras"][0]["RTSPuser"]+":"+self._confs["Cameras"][0]["RTSPpass"]+"@"+self._confs["Cameras"][0]["RTSPip"]+":"+self._confs["Cameras"][0]["RTSPport"]+"/"+self._confs["Cameras"][0]["RTSPendpoint"])
         
         self.Helpers.logMessage(
-            self.LogFile,
-            "TASS",
-            "INFO",
-            "Connected To Camera")
+                            self.LogFile,
+                            "TASS",
+                            "INFO",
+                            "Connected To Camera")
         
     def configureSocket(self):
 
@@ -211,37 +128,13 @@ class TASS():
         ###############################################################
 
         self.tassSocket = zmq.Context().socket(zmq.PUB)
-        self.tassSocket.connect('tcp://localhost:8956')
-        
-    def startMQTT(self):
+        self.tassSocket.connect("tcp://"+self._confs["Socket"]["host"]+":"+str(self._confs["Socket"]["port"]))
 
-        ###############################################################
-        #
-        # Starts the iotJumpWay connection
-        #
-        ###############################################################
-        
-        try:
-            
-            self.JumpWayCL = JWDevice.DeviceConnection({
-                "locationID": self._confs["IoTJumpWay"]["Location"],
-                "zoneID": self._confs["IoTJumpWay"]["Zone"],
-                "deviceId": self._confs["IoTJumpWay"]["Device"],
-                "deviceName": self._confs["IoTJumpWay"]["DeviceName"],
-                "username": self._confs["IoTJumpWayMQTT"]["MQTTUsername"],
-                "password": self._confs["IoTJumpWayMQTT"]["MQTTPassword"]})
-                
-        except Exception as e:
-            print(str(e))
-            sys.exit()
-            
-        self.JumpWayCL.connectToDevice()
-        
         self.Helpers.logMessage(
-			self.LogFile,
-            "TASS",
-            "INFO",
-            "iotJumpWay Ready")
+                            self.LogFile,
+                            "TASS",
+                            "INFO",
+                            "Connected To Socket")
         
 TASS = TASS()
 
@@ -304,11 +197,11 @@ while True:
                     
                     known, confidence = TASS.Facenet.match(
                         TASS.Facenet.infer(
-                            cv2.imread(TASS.validDir+valid), 
-                            TASS.fgraph),
-                            TASS.Facenet.infer(
-                                cv2.flip(currentFace, 1), 
-                                TASS.fgraph))
+                                        cv2.imread(TASS.validDir+valid), 
+                                        TASS.fgraph),
+                                        TASS.Facenet.infer(
+                                                        cv2.flip(currentFace, 1), 
+                                                        TASS.fgraph))
 
                     user = valid.rsplit(".", 1)[0].title()
                     inferEnd = (inferStart - time.time())
@@ -318,28 +211,26 @@ while True:
                         TASS.identified = TASS.identified + 1
 
                         TASS.MySql.trackHuman(
-                            TASS.MySql.getHuman(user), 
-                            TASS._confs["IoTJumpWay"]["Location"], 
-                            0, 
-                            TASS._confs["IoTJumpWay"]["Zone"], 
-                            TASS._confs["IoTJumpWay"]["Device"], 
-                             )
+                                        TASS.MySql.getHuman(user), 
+                                        TASS._confs["iotJumpWay"]["Location"], 
+                                        0, 
+                                        TASS._confs["iotJumpWay"]["Zone"], 
+                                        TASS._confs["iotJumpWay"]["Device"])
 		
                         TASS.Logging.logMessage(
-                            TASS.LogFile,
-                            "TASS",
-                            "INFO",
-                            "TASS Identified " + user + " In " + str(inferEnd) + " Seconds With Confidence Of " + str(confidence))
+                                            TASS.LogFile,
+                                            "TASS",
+                                            "INFO",
+                                            "TASS Identified " + user + " In " + str(inferEnd) + " Seconds With Confidence Of " + str(confidence))
 
                         TASS.JumpWayCL.publishToDeviceChannel(
-                            "TASS",
-                            {
-                                "WarningType":"SECURITY",
-                                "WarningOrigin": TASS._confs["Cameras"][1]["ID"],
-                                "WarningValue": "RECOGNISED",
-                                "WarningMessage": "RECOGNISED"
-                            }
-                        )
+                                                            "TASS",
+                                                            {
+                                                                "WarningType":"SECURITY",
+                                                                "WarningOrigin": TASS._confs["Cameras"][1]["ID"],
+                                                                "WarningValue": "RECOGNISED",
+                                                                "WarningMessage": "RECOGNISED"
+                                                            })
 
                         cv2.putText(
                             frame, 
@@ -354,29 +245,28 @@ while True:
                     else:
 		
                         TASS.Logging.logMessage(
-                            TASS.LogFile,
-                            "TASS",
-                            "INFO",
-                            "TASS Identified Unknown Human In " + str(inferEnd) + " Seconds With Confidence Of " + str(confidence))
+                                            TASS.LogFile,
+                                            "TASS",
+                                            "INFO",
+                                            "TASS Identified Unknown Human In " + str(inferEnd) + " Seconds With Confidence Of " + str(confidence))
 
                         TASS.JumpWayCL.publishToDeviceChannel(
-                            "TASS",
-                            {
-                                "WarningType": "SECURITY",
-                                "WarningOrigin": TASS._confs["Cameras"][1]["ID"],
-                                "WarningValue": "INTRUDER",
-                                "WarningMessage": "INTRUDER"
-                            }
-                        )
+                                                            "TASS",
+                                                            {
+                                                                "WarningType": "SECURITY",
+                                                                "WarningOrigin": TASS._confs["Cameras"][1]["ID"],
+                                                                "WarningValue": "INTRUDER",
+                                                                "WarningMessage": "INTRUDER"
+                                                            })
 
                         cv2.putText(
-                            frame,
-                            "Unknown " + str(confidence), 
-                            (x,y), 
-                            TASS.font, 
-                            TASS.fontScale,
-                            TASS.fontColor,
-                            TASS.lineType)
+                                frame,
+                                "Unknown " + str(confidence), 
+                                (x,y), 
+                                TASS.font, 
+                                TASS.fontScale,
+                                TASS.fontColor,
+                                TASS.lineType)
  
         encoded, buffer = cv2.imencode('.jpg', frame)
         TASS.tassSocket.send(base64.b64encode(buffer))

@@ -56,7 +56,7 @@ class MySql():
         try:
 
             self.mysqlDbConn = pymysql.connect(
-                                        host = self._confs["aiCore"]["IP"],
+                                        host = self._confs["MySql"]["host"],
                                         user = self._confs["MySql"]["dbusername"],
                                         passwd = self._confs["MySql"]["dbpassword"],
                                         db = self._confs["MySql"]["dbname"])
@@ -66,6 +66,18 @@ class MySql():
         except Exception as errorz:
             print('FAILED')
             print(errorz)
+
+    def getHuman(self, name):
+
+        try:
+
+            self.mysqlDbCur.execute("SELECT id FROM a7fh46_users WHERE name = '%s'" % (name))
+            
+        except Exception as errorz:
+            print('FAILED')
+            print(errorz)
+            
+        return self.mysqlDbCur.fetchone()
 
     def trackHuman(self, uid, lid, fid, zid, did ):
 

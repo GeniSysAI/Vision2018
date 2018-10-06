@@ -58,21 +58,82 @@ Combining **TASS Movidius Inception V3 Classifier** (prone to open set recogniti
 - 1 x Linux Desktop for Movidius development (Full SDK)
 - 1 x Raspberry Pi 3 / UP Squared for the classifier / servers
 
+# UFW Firewall
+
+UFW firewall is used to protect the ports of your TASS device. 
+
+```
+ $ sudo ufw status
+   Status: inactive
+```
+If you are using this system on the same device as your GeniSys server, the local firewall has already been set up when you set up the server all you need to do is open the ports that you decide to use for this project.
+
+The ports are specified in **required/confs.json**. The default settings are set to **8080** for the streaming port and **8181** for the socket port. **FOR YOUR SECURITY YOU SHOULD CHANGE THESE!**.
+
+```
+"Cameras": [
+    {
+        "ID": 0,
+        "URL": "",
+        "RTSPuser": "",
+        "RTSPpass": "",
+        "RTSPip": "",
+        "RTSPport": 0,
+        "RTSPendpoint": "",
+        "Name": "",
+        "Stream": "",
+        "StreamAccess": "",
+        "StreamPort": 8080,
+        "SocketPort": 8181 
+    }
+]
+```
+
+To allow access to the ports use the following command for each of your ports:
+
+```
+ $ sudo ufw allow 8080
+ $ sudo ufw allow 8181
+ $ sudo ufw status
+```
+
+```
+ Status: active
+
+ To                         Action      From
+ --                         ------      ----
+ 22                         ALLOW       Anywhere
+ 8080                       ALLOW       Anywhere
+ 8181                       ALLOW       Anywhere
+ 22 (v6)                    ALLOW       Anywhere (v6)
+ 8080 (v6)                  ALLOW       Anywhere (v6)
+ 8181 (v6)                  ALLOW       Anywhere (v6)
+```
+
 # Install NCSDK On Development Device
 
 ![Intel® Movidius](images/movidius.jpg)
 
-The first thing you will need to do is to install the **NCSDK** on your development device.
+Now install the **NCSDK** on your development device.
 
 ```
  $ mkdir -p ~/workspace
  $ cd ~/workspace
+ $ wget https://ncs-forum-uploads.s3.amazonaws.com/ncsdk/ncsdk-01_12_00_01-full/ncsdk-1.12.00.01.tar.gz 
+ $ tar -xvf ncsdk-1.12.00.01.tar.gz  
+ $ cd ~/workspace/ncsdk-1.12.00.01
+ $ make install
+```
+
+The above is a temporary way of getting the version we need as NCSDK Github is currently offline as they move towards an entirely open source project. Once this is fixed you will use the follwoing as normal:
+
+```
  $ git clone https://github.com/movidius/ncsdk.git
  $ cd ~/workspace/ncsdk
  $ make install
 ```
 
-Next plug your Movidius into your device and issue the following commands:
+Then plug your Movidius into your device and issue the following commands:
 
 ```
  $ cd ~/workspace/ncsdk
@@ -82,8 +143,9 @@ Next plug your Movidius into your device and issue the following commands:
 # Cloning The Repo
 
 You will need to clone this repository to a location on your development terminal. Navigate to the directory you would like to download it to and issue the following commands.
-
-    $ git clone https://github.com/GeniSysAI/Vision.git
+```
+  $ git clone https://github.com/GeniSysAI/Vision.git
+```
 
 Once you have the repo, you will find the related files in the [Foscam](https://github.com/GeniSysAI/Vision/Foscam "Foscam") directory.
 
@@ -113,7 +175,7 @@ If you have problems running the above program and have errors try run the follo
  $ sh setup.sh
 ```
 
-# iotJumpWay Device Connection Credentials & Settings
+## iotJumpWay Device Connection Credentials & Settings
 
 Setup an iotJumpWay Location Device for IDC Classifier, ensuring you set up a camera node, as you will need the ID of the dummy camera for the project to work. Once your create your device add the location ID and Zone ID to the **IoTJumpWay** details in the confs file located at **required/confs.json**, also add the device ID and device name exactly, add the MQTT credentials to the **IoTJumpWayMQTT** .
 
@@ -158,17 +220,13 @@ Follow the [iotJumpWay Dev Program Location Device Doc](https://www.iotjumpway.t
 }
 ```
 
-# Preparing Dataset
+## Preparing Dataset
 
 You need to set up two very small datasets. As we are using a pretrained Facenet model there is no training to do in this tutorial and we only need one image per known person. You should see the **known** and **testing** folders in the **data** directory, this is where you will store 1 image of each person you want to be identified by the network, and also a testing dataset that can include either known or unknown faces for testing. When you store the known data, you should name each image with the name you want them to be identified as in the system, in my testing I used images of me and two other random people, the 1 image used to represent myself in the known folder was named Adam
 
-# Run GeniSys Foscam TASS Device
+## Foscam Stream
 
-Now comes the good part, realtime facial recognition and identification. 
-
-![GeniSys Foscam TASS Device](images/capture.jpg)
-
-**Foscam.py** connects to the stream of the Foscam on your device, processes the frames and streams them to a local server. Be sure to update your configuration with your RTSP details for the Foscam stream.
+**Foscam.py** connects to the stream of the Foscam on your device, processes the frames and streams them to a local server. Be sure to update your configuration with your RTSP details for the Foscam stream. The ports are specified in **required/confs.json**. The default settings are set to **8080** for the streaming port and **8181** for the socket port. **FOR YOUR SECURITY YOU SHOULD CHANGE THESE!**.
 
 ```
 "Cameras": [
@@ -183,10 +241,18 @@ Now comes the good part, realtime facial recognition and identification.
         "Name": "",
         "Stream": "",
         "StreamAccess": "",
-        "StreamPort": 0 
+        "StreamPort": 8080 
     }
 ],
 ```
+```
+"Socket":{
+    "host" : "localhost",
+    "port" : 8181
+}
+```
+
+# Recognition / Identification
 
 The program uses a **dlib** model to recognize faces in the frames / mark the facial points on the frame, and **Facenet** to determine whether they are a known person or not. Below are the outputs around the time that the above photo was taken. You will see that the program publishes to the **Warnings** channel of the iotJumpWay, this is currently the name for the channel that handles device to device communication via rules but will change in the near future so something more appropriate.
 
@@ -205,14 +271,23 @@ The program uses a **dlib** model to recognize faces in the frames / mark the fa
 If you would like to use the IDC Classifier on the IoT, this tutorial has been tested on the **UP2** and the **Raspberry Pi**. You can install the **NCSDK** on your **UP Squared** / **Raspberry Pi 3** device, this will be used by the classifier to carry out inference on local images or images received via the API we will create. Make sure you have the Movidius plugged in to the device and follow the guide below:
 
 ```
- $ mkdir -p ~/workspace
- $ cd ~/workspace
+ $ mkdir -p ~/workspace && cd ~/workspace
+ $ wget https://ncs-forum-uploads.s3.amazonaws.com/ncsdk/ncsdk-01_12_00_01-full/ncsdk-1.12.00.01.tar.gz 
+ $ tar -xvf ncsdk-1.12.00.01.tar.gz  
+ $ cd ~/workspace/ncsdk-1.12.00.01/api/src
+ $ make
+ $ sudo make install
+```
+
+The above is a temporary way of getting the version we need as NCSDK Github is currently offline as they move towards an entirely open source project. Once this is fixed you will use the follwoing as normal:
+
+```
+ $ mkdir -p ~/workspace && cd ~/workspace
  $ git clone https://github.com/movidius/ncsdk.git
  $ cd ~/workspace/ncsdk/api/src
  $ make
  $ sudo make install
-```
-```
+ 
  $ cd ~/workspace
  $ git clone https://github.com/movidius/ncappzoo
  $ cd ncappzoo/apps/hello_ncs_py
@@ -221,12 +296,9 @@ If you would like to use the IDC Classifier on the IoT, this tutorial has been t
 
 # Upload File Structure To UP Squared / Raspberry Pi 3
 
-Now you need to upload the required files to the UP Squared / Raspberry Pi 3. Copy the **TASS-Facenet** directory from your **development machine** to your **UP Squared / Raspberry Pi 3** then navigate to the home directory of the project on your device and run the following command.  
-```
- $ pip3 install -r requirements.txt --user
-```
+Now you need to upload the required files to the UP Squared / Raspberry Pi 3. Copy the **Foscam** directory from your **development machine** to your **UP Squared / Raspberry Pi 3** then navigate to the home directory of the project.
 
-# Use GeniSys Foscam TASS Device on UP Squared / Raspberry Pi 3
+# Use GeniSys Foscam TASS Device
 
 **FI8916P-V3.py** connects to the Foscam stream, processes the frames and sends them to a local server. Be sure to edit the **ID** and **Name** values of the **Cameras** section of **required/confs.json** section using the details provided when setting up the configs, and add the URL of the IP of your device ie: http://192.168.1.200 to the **Stream** value and you can change **StreamPort** to whatever you want. These two fields will determine the address that you access your camera on, using the previous IP (Stream) and the StreamPort as 8080 the address would be **http://192.168.1.200:8080/index.html**.
 
@@ -236,7 +308,7 @@ You can use the **GeniSys Foscam TASS Device** on **UP Squared** / **Raspberry P
  $ python3.5 FI8916P-V3.py
 ```
 
-You can connect to the socket stream using FI8916P-V3-P.py. This program connects to the Foscam stream with OpenCV,  processes each frame, updating the frames with bounding boxes and classification results, and then streams the modified frames as an mjpg stream.
+You can connect to the socket stream using FI8916P-V3-P.py. This program connects to the socket stream with OpenCV,  processes each frame, updating the frames with bounding boxes and classification results, and then streams the modified frames as an mjpg stream.
 
 # Acknowledgements
 
