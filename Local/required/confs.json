@@ -1,64 +1,58 @@
 {
-    "AI":{
-        "Logs": "logs",
-        "IP": ""
-    },
-    "IoTJumpWay": 
-    {
-        "Location": 0,
-        "Zone": 0,
-        "Device": 0,
-        "DeviceName" : "",
-        "App": 0,
-        "AppName" : ""
-    },
-	"IoTJumpWayMQTT": {
-        "MQTTUsername": "",
-        "MQTTPassword": ""
-    },
+    "aiCore":{
+        "IP": "",
+        "Logs": "logs/"
+    }, 
     "Actuators": {},
     "Cameras": [
         {
             "ID": 0,
-            "URL": "",
-            "RTSPuser": "",
-            "RTSPpass": "",
-            "RTSPip": "",
-            "RTSPport": 0,
-            "RTSPendpoint": "",
             "Name": "",
-            "Stream": "",
-            "StreamAccess": "",
-            "StreamPort": 8080,
-            "SocketPort": 8956 
-        },
-        {
-            "ID": 1,
-            "URL": 0,
+            "URL": "",
             "RTSPuser": "",
             "RTSPpass": "",
             "RTSPip": "",
             "RTSPport": "",
             "RTSPendpoint": "",
-            "Name": "",
             "Stream": "",
             "StreamAccess": "",
-            "StreamPort": 9285,
-            "SocketPort": 8956
+            "StreamPort": 8080 
         }
     ],
-    "Sensors": {},
-	"ClassifierSettings":{
-        "NetworkPath":"",
-        "Graph":"model/tass.graph",
-        "Dlib":"model/dlib/shape_predictor_68_face_landmarks.dat",
+	"Classifier":{
 		"dataset_dir":"model/train/",
+        "Dlib":"model/dlib/shape_predictor_68_face_landmarks.dat",
+        "Graph":"model/tass.graph",
+        "NetworkPath":"",
         "TestingPath":"data/testing/",
         "ValidPath":"data/known/",
         "Threshold": 1.20
 	},
-	"MySql":{
+	"GeniSys":{
+		"RestEndpoint":""
+	},
+    "iotJumpWay": {
+        "API":{
+            "key" : ""
+        },
+        "App": 0,
+        "AppName" : "",
+        "Device": 0,
+        "DeviceName" : "",
+        "Location": 91,
+        "MQTT": {
+            "Username": "",
+            "Password": ""
+        },
+        "Zone": 98
+    },
+    "Sensors": {},
+	"Socket":{
         "host" : "localhost",
+        "port" : 8181
+    },
+	"MySql":{
+        "host" : "",
         "dbname" : "",
         "dbusername" : "",
         "dbpassword" : ""
