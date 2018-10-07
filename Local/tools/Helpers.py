@@ -2,7 +2,7 @@
 #
 # The MIT License (MIT)
 # 
-# TASS Helpers
+# GeniSys TASS Helpers
 # Copyright (C) 2018 Adam Milton-Barker (AdamMiltonBarker.com)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,26 +23,80 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-# Title:         TASS Helpers
-# Description:   Helper functions for TASS.
+# Title:         GeniSys TASS Helpers
+# Description:   Helper functions for GeniSys TASS devices and applications.
 # Configuration: required/confs.json
-# Last Modified: 2018-08-09
+# Last Modified: 2018-10-02
 #
 ############################################################################################
 
-import os, json, cv2
+import time, json
+
 from datetime import datetime
 
 class Helpers():
 
     def __init__(self):
 
+		###############################################################
+		#
+		# Nothing to do
+		#
+		###############################################################
         pass
 
     def loadConfigs(self):
 
+		###############################################################
+		#
+		# Loads the core JSON configuration from required/confs.json 
+		#
+		###############################################################
+
         with open("required/confs.json") as configs:
-
             configs = json.loads(configs.read())
-
         return configs
+
+    def timerStart(self):
+
+		###############################################################
+		#
+		# Starts the timer
+		#
+		###############################################################
+
+        return str(datetime.now()), time.time()
+
+    def timerEnd(self, start):
+
+		###############################################################
+		#
+		# Ends the timer
+		#
+		###############################################################
+
+        return time.time(), (time.time() - start), str(datetime.now())
+
+    def setLogFile(self, path):
+
+		###############################################################
+		#
+		# Sets a log file path
+		#
+		###############################################################
+        
+        return path + datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S') + ".txt"
+        
+    def logMessage(self, logfile, process, messageType, message, hide = False):
+
+		###############################################################
+		#
+		# Logs a message to a log file
+		#
+		###############################################################
+
+        logString = datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S') + "|" + process + "|" + messageType + ": " + message
+        with open(logfile,"a") as logLine:
+            logLine.write(logString+'\r\n')
+        if hide == False:
+            print(logString)

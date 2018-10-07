@@ -2,7 +2,7 @@
 #
 # The MIT License (MIT)
 # 
-# TASS Facenet WebCam LocalReceiver
+# TASS Facenet WebCam Receiver
 # Copyright (C) 2018 Adam Milton-Barker (AdamMiltonBarker.com)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,8 +23,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-# Title:         TASS Facenet WebCam LocalReceiver
-# Description:   Uses the Facenet LocalReceiver to classify frames of a live feed.
+# Title:         TASS Facenet WebCam Receiver
+# Description:   Uses the Facenet Receiver to classify frames of a live feed.
 # Configuration: required/confs.json
 # Last Modified: 2018-08-17
 #
@@ -59,25 +59,36 @@ from datetime import datetime
 
 capture=None
 
-class LocalReceiver():
+class Receiver():
     
     def __init__(self):
         
-        self._confs = {}
-        self.OpenCVCapture = None
-        
         self.Helpers = Helpers()
-        self.OpenCV = OpenCV()
-        self._confs = self.Helpers.loadConfigs()
+        self._confs  = self.Helpers.loadConfigs()
+        self.LogFile = self.Helpers.setLogFile(self._confs["aiCore"]["Logs"]+"/Local")  
+
+        self.OpenCV  = OpenCV()
 
         self.configureSocket()
         
     def configureSocket(self):
+
+        ###############################################################
+        #
+        # Configures the socket we will stream the frames to
+        #
+        ###############################################################
         
         context = zmq.Context()
         self.tassSocket = context.socket(zmq.SUB)
-        self.tassSocket.bind('tcp://*:8956')
+        self.tassSocket.bind("tcp://*:"+str(self._confs["Socket"]["port"]))
         self.tassSocket.setsockopt_string(zmq.SUBSCRIBE, np.unicode(''))
+
+        self.Helpers.logMessage(
+                            self.LogFile,
+                            "TASS",
+                            "INFO",
+                            "Connected To Socket: tcp://"+self._confs["Socket"]["host"]+":"+str(self._confs["Socket"]["port"]))
         
 class CamHandler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -93,7 +104,7 @@ class CamHandler(BaseHTTPRequestHandler):
                 while True:
                     # grab the frame from the threaded video stream and resize it
                     # to have a maximum width of 400 pixels
-                    frame = LocalReceiver.tassSocket.recv_string()
+                    frame = Receiver.tassSocket.recv_string()
                     frame = cv2.imdecode(np.fromstring(base64.b64decode(frame), dtype=np.uint8), 1)
                     
                     imgRGB=cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
@@ -109,12 +120,12 @@ class CamHandler(BaseHTTPRequestHandler):
                     fps.update()
                     frameWait = frameWait + 1
                     
-            except KeyboardInterrupt:
+            except:
                 return
             return
             
         if self.path.endswith('.html'):
-            src = '<img src="http://'+LocalReceiver._confs["Cameras"][0]["Stream"]+':'+str(LocalReceiver._confs["Cameras"][0]["StreamPort"])+'/cam.mjpg" />'
+            src = '<img src="http://'+Receiver._confs["Cameras"][0]["Stream"]+':'+str(Receiver._confs["Cameras"][0]["StreamPort"])+'/cam.mjpg" />'
             self.send_response(200)
             self.send_header('Content-type','text/html')
             self.end_headers()
@@ -127,15 +138,14 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 	"""Handle requests in a separate thread."""
 
 def main():
-	global capture
-	global LocalReceiver
+	global Receiver
 	global Facenet
-	LocalReceiver = LocalReceiver()
+	Receiver = Receiver()
 	Facenet = Facenet()
 
 	try:
-		server = ThreadedHTTPServer((LocalReceiver._confs["Cameras"][1]["Stream"], LocalReceiver._confs["Cameras"][1]["StreamPort"]), CamHandler)
-		print("-- Server started on "+LocalReceiver._confs["Cameras"][1]["Stream"]+":"+str(LocalReceiver._confs["Cameras"][1]["StreamPort"]))
+		server = ThreadedHTTPServer((Receiver._confs["Cameras"][0]["Stream"], Receiver._confs["Cameras"][0]["StreamPort"]), CamHandler)
+		print("-- Server started on "+Receiver._confs["Cameras"][0]["Stream"]+":"+str(Receiver._confs["Cameras"][0]["StreamPort"]))
 		server.serve_forever()
 	except KeyboardInterrupt:
 		server.socket.close()

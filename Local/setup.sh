@@ -1,9 +1,9 @@
 #!/bin/sh
 
 echo "SHELL|INFO: Location core"
-#pip3 install --upgrade pip --user
-#pip3 install -r requirements.txt --user 
-#echo "SHELL|OK: Installed Requirements"
+pip3 install --upgrade pip --user
+pip3 install -r requirements.txt --user 
+echo "SHELL|OK: Installed Requirements"
 
 if [ ! -f "model/20170512-110547.zip" ]
 then
