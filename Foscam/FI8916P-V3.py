@@ -27,7 +27,7 @@
 # Description:   Connects to the stream from a Foscam FI8916P V3, processes and streams the 
 #                modified stream.
 # Configuration: required/confs.json
-# Last Modified: 2018-10-02
+# Last Modified: 2018-10-07
 #
 # Example Usage:
 #
@@ -44,15 +44,15 @@ from skimage.transform import resize
 from imutils           import face_utils
 from flask             import Flask, request
 
+from tools.GeniSys     import GeniSys
 from tools.Helpers     import Helpers 
 from tools.JumpWay     import JumpWay
-from tools.MySql       import MySql
 from tools.OpenCV      import OpenCV
 from tools.Facenet     import Facenet
 
 app = Flask(__name__)
 
-class TASS():
+class Streamer():
     
     def __init__(self):
 
@@ -67,7 +67,7 @@ class TASS():
         self._confs      = self.Helpers.loadConfigs()
         self.LogFile     = self.Helpers.setLogFile(self._confs["aiCore"]["Logs"]+"/Foscam")  
         
-        self.MySql       = MySql()
+        self.GeniSys     = GeniSys()
         
         self.OpenCV      = OpenCV()
         self.OCVframe    = None
@@ -134,9 +134,9 @@ class TASS():
                             self.LogFile,
                             "TASS",
                             "INFO",
-                            "Connected To Socket")
+                            "Connected To Socket: tcp://"+self._confs["Socket"]["host"]+":"+str(self._confs["Socket"]["port"]))
         
-TASS = TASS()
+Streamer = Streamer()
 
 ###############################################################
 #
@@ -147,20 +147,30 @@ TASS = TASS()
 #
 ###############################################################
 
+cnt = 0
+last = time.time()
+smoothing = 0.60
+fps_smooth = 30
+count = 0 
+
 while True:
-    try:
 
-        _, frame = TASS.OCVframe.read()
-        frame    = cv2.resize(frame, (640, 480)) 
-        rawFrame = frame.copy()
+    isOK, frame = Streamer.OCVframe.read()
 
-        gray     = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        rects    = TASS.detector(gray, 0)
+    frame    = cv2.resize(frame, (640, 480)) 
+    rawFrame = frame.copy()
+
+    if count % 10 == 0:
+
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        print(count)
+        rects = Streamer.detector(gray, 0)
             
         for (i, rect) in enumerate(rects):
             
             shape = face_utils.shape_to_np(
-                TASS.predictor(
+                Streamer.predictor(
                     gray,
                     rect))
             
@@ -189,45 +199,45 @@ while True:
             if currentFace is None:
                 continue 
             
-            for valid in os.listdir(TASS.validDir):
+            for valid in os.listdir(Streamer.validDir):
                 
                 if valid.endswith('.jpg') or valid.endswith('.jpeg') or valid.endswith('.png') or valid.endswith('.gif'):
                     
                     inferStart = time.time()
                     
-                    known, confidence = TASS.Facenet.match(
-                        TASS.Facenet.infer(
-                                        cv2.imread(TASS.validDir+valid), 
-                                        TASS.fgraph),
-                                        TASS.Facenet.infer(
+                    known, confidence = Streamer.Facenet.match(
+                        Streamer.Facenet.infer(
+                                        cv2.imread(Streamer.validDir+valid), 
+                                        Streamer.fgraph),
+                                        Streamer.Facenet.infer(
                                                         cv2.flip(currentFace, 1), 
-                                                        TASS.fgraph))
+                                                        Streamer.fgraph))
 
                     user = valid.rsplit(".", 1)[0].title()
                     inferEnd = (inferStart - time.time())
                     
                     if (known==True):
                         
-                        TASS.identified = TASS.identified + 1
+                        Streamer.identified = Streamer.identified + 1
 
-                        TASS.MySql.trackHuman(
-                                        TASS.MySql.getHuman(user), 
-                                        TASS._confs["iotJumpWay"]["Location"], 
-                                        0, 
-                                        TASS._confs["iotJumpWay"]["Zone"], 
-                                        TASS._confs["iotJumpWay"]["Device"])
-		
-                        TASS.Logging.logMessage(
-                                            TASS.LogFile,
+                        Streamer.GeniSys.trackHuman(
+                                                Streamer.GeniSys.getHuman(user)["ResponseData"], 
+                                                Streamer._confs["iotJumpWay"]["Location"], 
+                                                0, 
+                                                Streamer._confs["iotJumpWay"]["Zone"], 
+                                                Streamer._confs["iotJumpWay"]["Device"])
+        
+                        Streamer.Helpers.logMessage(
+                                            Streamer.LogFile,
                                             "TASS",
                                             "INFO",
                                             "TASS Identified " + user + " In " + str(inferEnd) + " Seconds With Confidence Of " + str(confidence))
 
-                        TASS.JumpWayCL.publishToDeviceChannel(
+                        Streamer.JumpWayCL.publishToDeviceChannel(
                                                             "TASS",
                                                             {
                                                                 "WarningType":"SECURITY",
-                                                                "WarningOrigin": TASS._confs["Cameras"][1]["ID"],
+                                                                "WarningOrigin": Streamer._confs["Cameras"][0]["ID"],
                                                                 "WarningValue": "RECOGNISED",
                                                                 "WarningMessage": "RECOGNISED"
                                                             })
@@ -236,25 +246,25 @@ while True:
                             frame, 
                             user, 
                             (x,y), 
-                            TASS.font, 
-                            TASS.fontScale,
-                            TASS.fontColor,
-                            TASS.lineType)
+                            Streamer.font, 
+                            Streamer.fontScale,
+                            Streamer.fontColor,
+                            Streamer.lineType)
                         break
 
                     else:
-		
-                        TASS.Logging.logMessage(
-                                            TASS.LogFile,
+        
+                        Streamer.Helpers.logMessage(
+                                            Streamer.LogFile,
                                             "TASS",
                                             "INFO",
                                             "TASS Identified Unknown Human In " + str(inferEnd) + " Seconds With Confidence Of " + str(confidence))
 
-                        TASS.JumpWayCL.publishToDeviceChannel(
+                        Streamer.JumpWayCL.publishToDeviceChannel(
                                                             "TASS",
                                                             {
                                                                 "WarningType": "SECURITY",
-                                                                "WarningOrigin": TASS._confs["Cameras"][1]["ID"],
+                                                                "WarningOrigin": Streamer._confs["Cameras"][0]["ID"],
                                                                 "WarningValue": "INTRUDER",
                                                                 "WarningMessage": "INTRUDER"
                                                             })
@@ -263,15 +273,16 @@ while True:
                                 frame,
                                 "Unknown " + str(confidence), 
                                 (x,y), 
-                                TASS.font, 
-                                TASS.fontScale,
-                                TASS.fontColor,
-                                TASS.lineType)
- 
-        encoded, buffer = cv2.imencode('.jpg', frame)
-        TASS.tassSocket.send(base64.b64encode(buffer))
+                                Streamer.font, 
+                                Streamer.fontScale,
+                                Streamer.fontColor,
+                                Streamer.lineType)
 
-    except KeyboardInterrupt:
-        TASS.OCVframe.release()
-        cv2.destroyAllWindows()
-        break
+                    #time.sleep(1000)
+
+    encoded, buffer = cv2.imencode('.jpg', frame)
+    Streamer.tassSocket.send(base64.b64encode(buffer))
+
+    count += 1
+
+Streamer.OCVframe.release()

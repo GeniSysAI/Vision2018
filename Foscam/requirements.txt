@@ -1,6 +1,7 @@
 JumpWayMQTT
 dlib
 imutils
-opencv_python
-jsonpickle
+opencv-python
+zmq
+imutils
 flask

@@ -308,7 +308,7 @@ You can use the **GeniSys Foscam TASS Device** on **UP Squared** / **Raspberry P
  $ python3.5 FI8916P-V3.py
 ```
 
-You can connect to the socket stream using FI8916P-V3-P.py. This program connects to the socket stream with OpenCV,  processes each frame, updating the frames with bounding boxes and classification results, and then streams the modified frames as an mjpg stream.
+You can connect to the socket stream using FI8916P-V3-R.py. This program connects to the socket stream with OpenCV,  processes each frame, updating the frames with bounding boxes and classification results, and then streams the modified frames as an mjpg stream.
 
 # Acknowledgements
 
