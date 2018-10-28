@@ -15,6 +15,14 @@ As mentioned above, GeniSysAI TASS Devices are based on tassAI, a computer visio
 
 The server TASS program is designed to connect to your server webcam, or you can also configure the system to connect to a remote IP cam or Realsense camera. 
 
+## How It Works
+
+There are currently three different versions of GeniSysAI TASS devices: local, Foscam and Realsense (Foscam and Realsense are in development). Each device connects to a stream of one kind or another, processes the frames and streams the modified frames. 
+
+- [Local](https://github.com/GeniSysAI/Vision/tree/master/Local "Local")
+- [Foscam](https://github.com/GeniSysAI/Vision/tree/master/Foscam "Foscam")
+- [RealSense](https://github.com/GeniSysAI/Vision/tree/master/RealSense "RealSense")
+
 # About Siamese Neural Networks & Triplet Loss
  
 As mentioned above, GeniSysAI TASS Devices uses Siamese Neural Networks & Triplet Loss, but what exactly are they? 
@@ -25,7 +33,7 @@ Triplet Loss reduces the difference between an anchor (an image) and a positive 
 
 **MORE INFO:** [Lossless Triplet loss, A more efficient loss function for Siamese NN](https://towardsdatascience.com/lossless-triplet-loss-7e932f990b24 "Lossless Triplet loss, A more efficient loss function for Siamese NN")
 
-## The Open Set Recognition Issue
+# The Open Set Recognition Issue
 Taken from [Walter J. Scheirer's website](https://www.wjscheirer.com/projects/openset-recognition/ "Walter J. Scheirer's website"):
 
 ![Open Set Recognition Issue](Local/images/openset-recognition-issue.jpg) 
@@ -40,13 +48,25 @@ With previous versions of TASS built using Tensorflow, [TASS Movidius Inception 
 
 Combining **TASS Movidius Inception V3 Classifier** (prone to open set recognition issues) and **TASS Facenet Classifier** allows us to catch false positives and verify positive classifications using the name/ID of that prediction to quickly index into the images and make a single calculation to determine if Inception classified the person correctly or not using Facenet and making the project more scalable. The latest Inception version of the classifier will be uploaded to this repository soon.
 
-# How It Works
+# Intel® Software Innovators
 
-There are currently three different versions of GeniSysAI TASS devices: local, Foscam and Realsense (Foscam and Realsense are in development). Each device connects to a stream of one kind or another, processes the frames and streams the modified frames. 
+Through my role as an [Intel Software Innovator](https://software.intel.com/en-us/intel-software-innovators/overview "Intel Software Innovator") I am lucky enough to get access to the latest Intel technologies that help me build better projects and make better demos. In this project I use three types of Intel hardware/software:
 
-- [Local](https://github.com/GeniSysAI/Vision/tree/master/Local "Local")
-- [Foscam](https://github.com/GeniSysAI/Vision/tree/master/Foscam "Foscam")
-- [RealSense](https://github.com/GeniSysAI/Vision/tree/master/RealSense "RealSense")
+- Intel® Movidius™ (Neural Compute Stick)
+- Intel® RealSense™ (Depth Camera D415)
+- Intel®/Aaeon UP Squared Development Board
+
+# Intel® Movidius™
+
+![Intel® Movidius™](images/movidius.jpg) 
+
+# Intel® RealSense™
+
+![Intel® RealSense™](RealSense/images/realsense-D415.jpg) 
+
+# Intel®/Aaeon UP Squared
+
+![Intel®/Aaeon UP Squared](images/UPSquared.jpg) 
 
 # Acknowledgements
 
@@ -74,7 +94,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](https://g
 I use the [repo issues](https://github.com/GeniSysAI/Vision/issues "repo issues") to track bugs and general requests related to using this project. 
 
 # Author
-I am a BigFinite IoT Network Engneer & an Intel Software Innovator in the fields of Internet of Things, Artificial Intelligence and Virtual Reality.
+I am a [BigFinite](https://www.bigfinite.com "BigFinite") IoT Network Engneer, part of the team that works on the core IoT software for our platform. In my spare time I am an [Intel Software Innovator](https://software.intel.com/en-us/intel-software-innovators/overview "Intel Software Innovator") in the fields of Internet of Things, Artificial Intelligence and Virtual Reality.  
 [![Adam Milton-Barker: BigFinte IoT Network Engineer & Intel® Software Innovator](images/Adam-Milton-Barker.jpg)](https://github.com/AdamMiltonBarker)
 
 
