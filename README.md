@@ -56,17 +56,23 @@ Through my role as an [Intel Software Innovator](https://software.intel.com/en-u
 - Intel® RealSense™ (Depth Camera D415)
 - Intel®/Aaeon UP Squared Development Board
 
-# Intel® Movidius™
+# Intel® Movidius™ Neural Compute Stick
 
 ![Intel® Movidius™](images/movidius.jpg) 
+
+I currently use Intel® Movidius™ Neural Compute Stick in the TASS projects to absorb the computational power of facial classification in the TASS devices, allowing lower powered IoT devices to carry out inference such as UP Squared or Raspberry Pi. Each of the GeniSysAI TASS Device projects have the requirement of at least one Movidius NCS. 
+
+# Intel®/Aaeon UP Squared
+
+![Intel®/Aaeon UP Squared](images/UPSquared.jpg) 
+
+Except for the local camera devices run on UP Squared IoT development boards. You can also use Linux desktop or laptop devices as well as other IoT development boards such as Raspberry Pi.
 
 # Intel® RealSense™
 
 ![Intel® RealSense™](RealSense/images/realsense-D415.jpg) 
 
-# Intel®/Aaeon UP Squared
-
-![Intel®/Aaeon UP Squared](images/UPSquared.jpg) 
+Logitech cameras will work fine with these projects, but the quality is much better and the classification much more accurate when using an Intel RealSense camera. In my home I use an Intel® RealSense™ Depth Camera D415. I also use a program that can connect to my Foscam IP camera, in my home I have the Foscam set to infrared mode permanently. 
 
 # Acknowledgements
 
