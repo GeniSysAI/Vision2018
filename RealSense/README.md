@@ -102,26 +102,11 @@ First update your distribution to make sure everything is up to date and you hav
  $ sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade
 ```
 
-## Install NCSDK
+## Setup Intel® Movidius™
 
 ![Intel® Movidius™](../images/movidius.jpg)
 
-Now you will need to install the **NCSDK** on your development device.
-
-```
- $ mkdir -p ~/workspace
- $ cd ~/workspace
- $ git clone https://github.com/movidius/ncsdk.git
- $ cd ~/workspace/ncsdk
- $ make install
-```
-
-Next plug your Movidius into your device and issue the following commands:
-
-```
- $ cd ~/workspace/ncsdk
- $ make examples
-```
+Now you will need to install the **NCSDK** on your development device. Intel have recently released [Neural Compute SDK2](https://github.com/movidius/ncsdk/tree/ncsdk2 "Neural Compute SDK2"), this tutorial documents my first use of the new SDK and the code has been updated to align with the requirements of the new SDK.
 
 # Tracking & Privacy
 
