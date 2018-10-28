@@ -1,19 +1,23 @@
-# GeniSys TASS Devices & Applications
-[![GeniSys TASS Devices & Applications](images//GeniSys.png)](https://github.com/GeniSysAI/Vision)
+# GeniSysAI TASS Devices & Applications
+[![GeniSysAI TASS Devices & Applications](images//GeniSys.png)](https://github.com/GeniSysAI/Vision)
 
 [![UPCOMING RELEASE](https://img.shields.io/badge/UPCOMING%20RELEASE-0.0.1-blue.svg)](https://github.com/GeniSysAI/Vision/tree/0.0.1)
 
-# About GeniSys AI
+# About GeniSysAI 
 
-GeniSys AI is an open source Artificial Intelligence Assistant Network using Computer Vision, Natural Linguistics and the Internet of Things. GeniSys uses a system based on [TASS A.I](https://github.com/TASS-AI/TASS-Facenet "TASS A.I") for [vision](https://github.com/GeniSysAI/Vision "vision"), an [NLU engine](https://github.com/GeniSysAI/NLU "NLU engine") for natural language understanding, in browser speech synthesis and speech recognition for speech and hearing, all homed on a dedicated Linux server in your home and managed via a secure UI.
+GeniSysAI is a project I created for my home and decided to open source a version for others to learn or use at home. The project is a home Artificial Intelligence Assistant Network that uses Computer Vision, Natural Linguistics and the Internet of Things working together to create a single "intelligence". GeniSysAI uses a system based on [TASS A.I](https://github.com/TASS-AI/TASS-Facenet "TASS A.I") for [vision](https://github.com/GeniSysAI/Vision "vision"), an [NLU engine](https://github.com/GeniSysAI/NLU "NLU engine") for natural language understanding, in browser speech synthesis and speech recognition for speech and hearing, and a home [server](https://github.com/GeniSysAI/Server "server") managed via a secure GUI.
 
-# About GeniSys TASS Devices & Applications
+# About GeniSysAI TASS Devices
 
-The **GeniSys TASS Devices & Applications** uses Siamese Neural Networks and Triplet Loss to classify known and unknown faces, basically this calculates the distance between an image it is presented and a folder of images of known faces. The local engine is homed on your GeniSys server and connects to your server webcam, this is one of the reasons why the UI is designed to be used on the local network, as if you connect from any where other than in front of the local camera then GeniSys will not be able to see you.
+As mentioned above, GeniSysAI TASS Devices are based on tassAI, a computer vision software I made that is able to communicate with applications and devices via the Internet of Things. There are several versions of TASS and several different projects that evolved from the concept. Each version of TASS uses different techniques and technologies to accomplish facial recognition and other computer vision uses. For a full history of tassAI, check out the [tassAI history repo](https://github.com/TASS-AI/Tass-History "tassAI history repo").
 
-# Siamese Neural Networks & Triplet Loss
+**GeniSysAI TASS Devices** currently use Siamese Neural Networks and Triplet Loss ([davidsandberg/facenet Github](https://github.com/davidsandberg/facenet "davidsandberg/facenet")) to classify known and unknown faces. Basically we use the Siamese Neural Networks to calculate the distance between a presented image and a folder of images of known faces. 
+
+The server TASS program is designed to connect to your server webcam, or you can also configure the system to connect to a remote IP cam or Realsense camera. 
+
+# About Siamese Neural Networks & Triplet Loss
  
-As mentioned above, GeniSys TASS Devices & Applications uses Siamese Neural Networks & Triplet Loss, but what exactly are they?
+As mentioned above, GeniSysAI TASS Devices & Applications uses Siamese Neural Networks & Triplet Loss, but what exactly are they? 
 
 Siamese Neural Networks basically are made up of 2 neural networks that are exactly the same, hence the name Siamese Neural Networks. Given two images, we use the identical networks to calculate the similarity between the two images. Basically Siamese Neural Networks learn how to differentiate between objects, or in this case, faces. 
 
@@ -38,7 +42,7 @@ Combining **TASS Movidius Inception V3 Classifier** (prone to open set recogniti
 
 # How It Works
 
-There are currently three different versions of GeniSys TASS devices: local, Foscam and Realsense (Foscam and Realsense are in development). Each device connects to a stream of one kind or another, processes the frames and streams the modified frames. 
+There are currently three different versions of GeniSysAI TASS devices: local, Foscam and Realsense (Foscam and Realsense are in development). Each device connects to a stream of one kind or another, processes the frames and streams the modified frames. 
 
 - [Local](https://github.com/GeniSysAI/Vision/tree/master/Local "Local")
 - [Foscam](https://github.com/GeniSysAI/Vision/tree/master/Foscam "Foscam")
@@ -54,10 +58,11 @@ There are currently three different versions of GeniSys TASS devices: local, Fos
 Links to related articles that helped at various stages of the project for research / code examples:
 
 - [Open Set Recognition Issue](https://www.wjscheirer.com/projects/openset-recognition/ "Open Set Recognition Issue")
+- [Lossless Triplet loss, A more efficient loss function for Siamese NN](https://towardsdatascience.com/lossless-triplet-loss-7e932f990b24 "Lossless Triplet loss, A more efficient loss function for Siamese NN")
 - [PyImageSearch](https://www.pyimagesearch.com/ "PyImageSearch")
 
 # Contributing
-Please read [CONTRIBUTING.md](https://github.com/GeniSysAI/Vision/blob/master/CONTRIBUTING.md "CONTRIBUTING.md") for details on our code of conduct, and the process for submitting pull requests to me.
+Please read [CONTRIBUTING.md](https://github.com/GeniSysAI/Vision/blob/master/CONTRIBUTING.md "CONTRIBUTING.md") for details on my code of conduct, and the process for submitting pull requests to me.
 
 # Versioning
 I use SemVer for versioning. For the versions available, see [GeniSysAI/Vision/releases](https://github.com/GeniSysAI/Vision/releases "GeniSysAI/Vision/releases").
@@ -69,7 +74,8 @@ This project is licensed under the **MIT License** - see the [LICENSE](https://g
 I use the [repo issues](https://github.com/GeniSysAI/Vision/issues "repo issues") to track bugs and general requests related to using this project. 
 
 # Author
-[![Adam Milton-Barker: BigFinte IoT Network Engineer & Intel® Software Innovator (IoT, AI, VR)](images/Adam-Milton-Barker.jpg)](https://github.com/AdamMiltonBarker)
+I am a BigFinite IoT Network Engneer & an Intel Software Innovator in the fields of Internet of Things, Artificial Intelligence and Virtual Reality.
+[![Adam Milton-Barker: BigFinte IoT Network Engineer & Intel® Software Innovator](images/Adam-Milton-Barker.jpg)](https://github.com/AdamMiltonBarker)
 
 
 
