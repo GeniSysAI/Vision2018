@@ -1,5 +1,5 @@
-# GeniSysAI TASS Devices & Applications
-[![GeniSysAI TASS Devices & Applications](images//GeniSys.png)](https://github.com/GeniSysAI/Vision)
+# GeniSysAI TASS Devices
+[![GeniSysAI TASS Devices](images//GeniSys.png)](https://github.com/GeniSysAI/Vision)
 
 [![UPCOMING RELEASE](https://img.shields.io/badge/UPCOMING%20RELEASE-0.0.1-blue.svg)](https://github.com/GeniSysAI/Vision/tree/0.0.1)
 
@@ -17,7 +17,7 @@ The server TASS program is designed to connect to your server webcam, or you can
 
 # About Siamese Neural Networks & Triplet Loss
  
-As mentioned above, GeniSysAI TASS Devices & Applications uses Siamese Neural Networks & Triplet Loss, but what exactly are they? 
+As mentioned above, GeniSysAI TASS Devices uses Siamese Neural Networks & Triplet Loss, but what exactly are they? 
 
 Siamese Neural Networks basically are made up of 2 neural networks that are exactly the same, hence the name Siamese Neural Networks. Given two images, we use the identical networks to calculate the similarity between the two images. Basically Siamese Neural Networks learn how to differentiate between objects, or in this case, faces. 
 
