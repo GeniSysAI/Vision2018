@@ -94,6 +94,25 @@ To allow access to the ports use the following command for each of your ports us
  $ sudo ufw allow YourPortNumber
 ```
 
+Also allow SSH and restart the service:
+
+```
+ $ sudo ufw allow ssh
+ $ sudo ufw enable
+ $ sudo ufw status
+
+   Status: active
+
+   To                         Action      From
+   --                         ------      ----
+   8080                       ALLOW       Anywhere
+   8181                       ALLOW       Anywhere
+   22                         ALLOW       Anywhere
+   8080 (v6)                  ALLOW       Anywhere (v6)
+   8181 (v6)                  ALLOW       Anywhere (v6)
+   22   (v6)                  ALLOW       Anywhere (v6)
+```
+
 ## Update Linux Distribution
 
 First update your distribution to make sure everything is up to date and you have the latest security patches, this may take some time. 
@@ -106,7 +125,15 @@ First update your distribution to make sure everything is up to date and you hav
 
 ![Intel® Movidius™](../images/movidius.jpg)
 
-Now you will need to install the **NCSDK** on your development device. Intel have recently released [Neural Compute SDK2](https://github.com/movidius/ncsdk/tree/ncsdk2 "Neural Compute SDK2"), this tutorial documents my first use of the new SDK and the code has been updated to align with the requirements of the new SDK.
+Now you will need to install the **NCSDK** on the UP Squared/Raspberry Pi/Linux device. Intel have recently released [Neural Compute SDK2](https://github.com/movidius/ncsdk/tree/ncsdk2 "Neural Compute SDK2"), this tutorial documents my first use of the new SDK and the code has been updated to align with the requirements of the new SDK.
+
+### Install NCSDK2
+
+Install NCSDK2 by using the following command on the UP Squared/Raspberry Pi/Linux device 
+
+```
+ $ git clone -b ncsdk2 http://github.com/Movidius/ncsdk && cd ncsdk && make install
+```
 
 # Tracking & Privacy
 
