@@ -136,7 +136,8 @@ Links to related articles that helped at various stages of the project for resea
 
 # Author
 
-I am a [BigFinite](https://www.bigfinite.com "BigFinite") IoT Network Engneer, part of the team that works on the core IoT software for our platform. In my spare time I am an [Intel Software Innovator](https://software.intel.com/en-us/intel-software-innovators/overview "Intel Software Innovator") in the fields of Internet of Things, Artificial Intelligence and Virtual Reality.<br/>
+I am a [BigFinite](https://www.bigfinite.com "BigFinite") IoT Network Engneer, part of the team that works on the core IoT software for our platform. In my spare time I am an [Intel Software Innovator](https://software.intel.com/en-us/intel-software-innovators/overview "Intel Software Innovator") in the fields of Internet of Things, Artificial Intelligence and Virtual Reality.
+
 [![Adam Milton-Barker: BigFinte IoT Network Engineer & Intel® Software Innovator](../images/Adam-Milton-Barker.jpg)](https://github.com/AdamMiltonBarker)
 
 
