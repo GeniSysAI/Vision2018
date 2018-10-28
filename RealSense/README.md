@@ -44,7 +44,7 @@ You must of already completed the setup of the following project(s):
 
 ## Hardware Requirements
 
-- 1 x [Intel® Movidius](https://www.movidius.com/ "Intel® Movidius")
+- 1 x [Intel® Movidius™](https://www.movidius.com/ "Intel® Movidius™")
 - 1 x [Intel® RealSense™ Depth Camera D415](https://click.intel.com/intelr-realsensetm-depth-camera-d415.html "Intel® RealSense™ Depth Camera D415")
 - 1 x [Intel®/Aaeon UP Squared Grove Developer Kit](https://software.intel.com/en-us/iot/hardware/up-squared-grove-dev-kit "Intel®/Aaeon UP Squared Grove Developer Kit")
 
@@ -52,6 +52,7 @@ You must of already completed the setup of the following project(s):
 
 1. Configure the UFW firewall on the UP Squared/Raspberry Pi/Linux device to allow traffic to the ports used in this project.
 2. Update the Linux distribution on the UP Squared/Raspberry Pi/Linux device.
+3. Install the NCSDK (Neural Compute Stick Software Development Kit) on the UP Squared/Raspberry Pi/Linux device.
 
 # Setup Your UP2/RPI/Linux Device
 
@@ -101,6 +102,27 @@ First update your distribution to make sure everything is up to date and you hav
  $ sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade
 ```
 
+## Install NCSDK
+
+![Intel® Movidius™](../images/movidius.jpg)
+
+Now you will need to install the **NCSDK** on your development device.
+
+```
+ $ mkdir -p ~/workspace
+ $ cd ~/workspace
+ $ git clone https://github.com/movidius/ncsdk.git
+ $ cd ~/workspace/ncsdk
+ $ make install
+```
+
+Next plug your Movidius into your device and issue the following commands:
+
+```
+ $ cd ~/workspace/ncsdk
+ $ make examples
+```
+
 # Tracking & Privacy
 
 It is important to note that TASS communicates with the iotJumpWay to register events that can be used in conjunction with rules set up in the iotJumpWay console. No identifying information is now sent to the iotJumpWay, instead all data is stored on the local server MySql database. This ensures you remain in control of the data generated on your network, but can also benefit from automation via iotJumpWay rules.
@@ -124,7 +146,7 @@ I use the [repo issues](https://github.com/GeniSysAI/Vision/issues "repo issues"
 # Acknowledgements
 
 - Uses code from Intel® **movidius/ncsdk** ([movidius/ncsdk Github](https://github.com/movidius/ncsdk "movidius/ncsdk Github"))
-- Uses code from Intel® **davidsandberg/facenet** ([davidsandberg/facenet Github](https://github.com/davidsandberg/facenet "davidsandberg/facenet"))
+- Uses code from **davidsandberg/facenet** ([davidsandberg/facenet Github](https://github.com/davidsandberg/facenet "davidsandberg/facenet"))
 
 # Useful Links
 
